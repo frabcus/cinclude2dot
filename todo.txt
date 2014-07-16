@@ -1,0 +1,10 @@
+> >Hi
+> >
+> >I tried your script, it's good.
+> >
+> >But I'd like to ask to add the options of including or not files with
+> ><xxx.h> in the result dot file.
+> >For example:
+> >#    if ($line =~ m#^\#\s*include\s(\S+)#)
+> >   if ($line =~ m#^\#\s*include\s+"(\S+)"#)
+
