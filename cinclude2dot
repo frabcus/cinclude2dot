@@ -39,7 +39,8 @@ Command line options are:
                  both - the default, parse all headers.
                  angle - include only "system" headers included by anglebrackets (<>)
                  quote - include only "user" headers included by strip quotes ("")
---src         Followed by a path to the source code, defaults to current directory
+--src         Followed by a list of comma-separated paths to the source code, 
+                defaults to current directory
 
 END
 	exit 0;
@@ -91,13 +92,14 @@ my $exclude = "";
 my $merge = "file";
 my $includelist = "";
 my $quotetypes = "both";
-my $src = '.';
+my $srclist = '.';
 die if !GetOptions('paths' => \$paths, 'groups' => \$groups,
 		   'exclude=s' => \$exclude, 'merge=s' => \$merge,
 		   'include=s' => \$includelist, 'help' =>\$help,
 		   'debug' => \$debug, 'quotetypes=s' => \$quotetypes,
-		   'src=s' => \$src);
+		   'src=s' => \$srclist);
 my @includepaths = split(/,/,$includelist);
+my @srcpaths = split(/,/,$srclist);
 help() if ($help);
 if ($merge ne "file" && $merge ne "module" && $merge ne "directory")
 {
@@ -180,7 +182,9 @@ sub file_display {
 # Main code
 
 my @files;
-find sub { push @files, $File::Find::name if /\.(c|cc|cxx|cpp|C|h|hpp|hxx)$/ }, $src;
+for my $src (@srcpaths) {
+	find sub { push @files, $File::Find::name if /\.(c|cc|cxx|cpp|C|h|hpp|hxx)$/ }, $src;
+}
 
 print <<END;
 digraph "source tree" {
